@@ -1,0 +1,21 @@
+{
+  "models": {
+    "status": 200,
+    "headers": {"X-Provider-Environment": "staging"},
+    "body": {"object": "list", "data": [{"id": "example-chat", "object": "model"}]}
+  },
+  "completion": {
+    "status": 200,
+    "headers": {"X-Provider-Environment": "staging"},
+    "body": {
+      "id": "fixture-completion",
+      "choices": [{"message": {"role": "assistant", "content": "OK"}}],
+      "usage": {"prompt_tokens": 5, "completion_tokens": 1, "total_tokens": 6}
+    }
+  },
+  "error": {
+    "status": 404,
+    "headers": {"X-Provider-Environment": "staging"},
+    "body": {"error": {"message": "The requested model does not exist.", "type": "invalid_request_error"}}
+  }
+}

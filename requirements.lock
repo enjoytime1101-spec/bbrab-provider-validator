@@ -1,0 +1,3 @@
+# Runtime dependencies: none.
+# Tests use Python's standard library only.
+# Packaging uses the repository-local standard-library PEP 517 backend.

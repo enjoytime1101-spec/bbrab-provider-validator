@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Unit and mock HTTP tests
+        run: PYTHONPATH=src python -m unittest discover -s tests -v
+      - name: Offline CLI smoke test
+        run: >-
+          PYTHONPATH=src python -m bbrab_provider_validator validate
+          --config examples/provider.example.json
+          --fixture examples/fixture.passing.json
+      - name: Fresh-venv offline install and console CLI
+        run: |
+          python -m venv "$RUNNER_TEMP/bbrab-clean"
+          "$RUNNER_TEMP/bbrab-clean/bin/python" -m pip install --no-index --no-build-isolation .
+          "$RUNNER_TEMP/bbrab-clean/bin/bbrab-provider-validator" --version
+          "$RUNNER_TEMP/bbrab-clean/bin/bbrab-provider-validator" validate \
+            --config examples/provider.example.json \
+            --fixture examples/fixture.passing.json
+      - name: Reject obvious credential material
+        run: >-
+          python -c "from pathlib import Path; import re, sys;
+          files=[p for p in Path('.').rglob('*') if p.is_file() and '.git' not in p.parts];
+          bad=[];
+          patterns=[re.compile(r'sk-[A-Za-z0-9_-]{20,}'), re.compile(r'(?i)authorization[ ]*:[ ]*bearer[ ]+[A-Za-z0-9._~+/=-]{16,}')];
+          [bad.append(str(p)) for p in files for pattern in patterns if pattern.search(p.read_text(errors='ignore'))];
+          print('credential scan passed' if not bad else '\n'.join(sorted(set(bad))));
+          sys.exit(bool(bad))"

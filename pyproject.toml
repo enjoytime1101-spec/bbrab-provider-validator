@@ -1,0 +1,26 @@
+[build-system]
+requires = []
+build-backend = "bbrab_build"
+backend-path = ["build_backend"]
+
+[project]
+name = "bbrab-provider-validator"
+version = "0.1.0"
+description = "Offline-first acceptance checks for OpenAI-compatible providers"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "Apache-2.0"}
+authors = [{name = "BBRab Contributors"}]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+]
+dependencies = []
+
+[project.scripts]
+bbrab-provider-validator = "bbrab_provider_validator.cli:main"
+
+[tool.coverage.run]
+source = ["bbrab_provider_validator"]

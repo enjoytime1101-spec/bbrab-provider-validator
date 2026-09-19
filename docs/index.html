@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark light">
+    <title>BBRab Provider Validator Playground</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="eyebrow">Offline-only configuration workspace</p>
+        <h1>Provider Validator Playground</h1>
+        <p>Review a sample configuration, catch boundary errors, and export clean JSON or Markdown. Nothing leaves this browser tab.</p>
+      </header>
+
+      <aside role="note">
+        <strong>No production secrets.</strong> This page rejects credential-like fields, never calls a provider, and stores nothing in cookies or local storage.
+      </aside>
+
+      <section class="workspace" aria-label="Configuration workspace">
+        <div class="panel editor-panel">
+          <div class="panel-heading">
+            <h2>Sample configuration</h2>
+            <button id="load-example" type="button" class="secondary">Reset example</button>
+          </div>
+          <label for="config">Secret-free JSON</label>
+          <textarea id="config" spellcheck="false" aria-describedby="input-help"></textarea>
+          <p id="input-help" class="hint">Use only an environment-variable name under <code>credential.env</code>.</p>
+          <div class="actions">
+            <button id="validate" type="button">Validate sample</button>
+            <button id="export-json" type="button" class="secondary">Export JSON</button>
+            <button id="export-markdown" type="button" class="secondary">Export Markdown</button>
+          </div>
+        </div>
+
+        <div class="panel results-panel" aria-live="polite">
+          <div class="panel-heading">
+            <h2>Review</h2>
+            <span id="status" class="status idle">Not checked</span>
+          </div>
+          <ul id="errors" class="errors"></ul>
+          <pre id="preview" tabindex="0">Run validation to produce an export preview.</pre>
+        </div>
+      </section>
+
+      <footer>
+        This Playground validates configuration shape only. Run the Python CLI with an offline fixture for acceptance evidence.
+      </footer>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

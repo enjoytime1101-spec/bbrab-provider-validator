@@ -1,0 +1,6 @@
+interface:
+  display_name: "BBRab Provider Validator"
+  short_description: "Validate OpenAI-compatible provider evidence"
+  default_prompt: "Use $bbrab-provider-validator to validate this provider fixture without making live requests."
+policy:
+  allow_implicit_invocation: true
