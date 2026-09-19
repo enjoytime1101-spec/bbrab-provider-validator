@@ -6,4 +6,5 @@ build/
 *.egg-info/
 .coverage
 provider-report.*
+release-evidence/
 .DS_Store

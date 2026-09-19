@@ -27,3 +27,5 @@ Reports contain `contract`, `generated_at`, `mode`, `provider`, `status`, and `c
 Usage detail contains exactly `prompt_tokens`, `completion_tokens`, and `total_tokens`; unknown provider extensions are discarded. Error detail contains only the HTTP status and structural summary fields. Original provider error messages, response headers, completion text, and response bodies are never exported.
 
 The report includes `provider.credential_env` as a reference. It never includes the environment variable value.
+
+Markdown rendering HTML-escapes and Markdown-escapes every dynamic field, replaces control characters with spaces, encodes backticks and table delimiters, and never inserts raw provider text into document structure.

@@ -10,6 +10,8 @@ Live transport ignores default proxy variables, does not follow redirects, limit
 
 Redaction is defense in depth, not permission to place secrets in input. If a secret may have entered a file, terminal transcript, CI log, issue, or commit, revoke it with the provider first and then remove the exposed copy.
 
+The static Playground mirrors the CLI's credential-field, credential-shaped-value, custom-header, host, environment, and probe-budget checks. It uses text-only DOM updates and escapes every dynamic Markdown value, including HTML, backticks, control characters, and table delimiters. Node tests exercise the same pure functions loaded by the browser.
+
 ## Supported versions
 
 Before 1.0, security updates target the latest tagged release and the default branch. Older pre-1.0 releases are not maintained.

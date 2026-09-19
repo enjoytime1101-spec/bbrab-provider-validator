@@ -16,6 +16,7 @@ from bbrab_provider_validator.cli import main
 from bbrab_provider_validator.config import ConfigurationError, LiveTarget, resolve_live_target, validate_config
 from bbrab_provider_validator.http_client import Response, TransportError, _PinnedHTTPSConnection, request_json
 from bbrab_provider_validator.redact import REDACTED, redact
+from bbrab_provider_validator.report import markdown_report
 from bbrab_provider_validator.validator import validate_fixture, validate_live
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -128,6 +129,28 @@ class FixtureTests(unittest.TestCase):
         for secret in ("alpha", "beta", "gamma", "delta", "epsilon", "HttpOnly"):
             self.assertNotIn(secret, value)
         self.assertIn("safe line", value)
+
+    def test_python_markdown_escapes_all_dynamic_fields(self) -> None:
+        report = {
+            "status": "passed<script>",
+            "mode": "fixture`mode",
+            "contract": "contract\n# injected",
+            "provider": {"name": "<img src=x> `name`\n| cell", "environment": "stage|prod"},
+            "checks": [{
+                "name": "check|name",
+                "status": "passed\n| forged | row |",
+                "detail": {"dynamic": "<script>`tick`\n| value"},
+            }],
+        }
+        rendered = markdown_report(report)
+        self.assertNotIn("<script>", rendered)
+        self.assertNotIn("<img", rendered)
+        self.assertNotIn("`tick`", rendered)
+        self.assertNotIn("\n# injected", rendered)
+        self.assertNotIn("| forged | row |", rendered)
+        self.assertIn("&lt;script&gt;", rendered)
+        self.assertIn("&grave;tick&grave;", rendered)
+        self.assertIn("&vert;", rendered)
 
     def test_provider_error_original_and_usage_are_safely_exported(self) -> None:
         fixture = passing_fixture()

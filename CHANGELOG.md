@@ -11,3 +11,5 @@ All notable changes will be documented here. The format follows Keep a Changelog
 - Recursive redaction and JSON/Markdown reports.
 - Local mock HTTP tests, CI, static Playground, Codex Skill, and Prompt Blocks.
 - Repository-local, standard-library PEP 517 backend for fresh-venv offline installation without setuptools or wheel.
+- Browser/Node shared Playground safety validation and dynamic Markdown escaping.
+- Wheel/source-distribution offline installation evidence with SHA-256 release asset inventory.

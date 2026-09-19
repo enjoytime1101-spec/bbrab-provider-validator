@@ -20,6 +20,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Unit and mock HTTP tests
         run: PYTHONPATH=src python -m unittest discover -s tests -v
+      - name: Playground security tests
+        run: node --test tests/playground.test.js
       - name: Offline CLI smoke test
         run: >-
           PYTHONPATH=src python -m bbrab_provider_validator validate
@@ -33,6 +35,11 @@ jobs:
           "$RUNNER_TEMP/bbrab-clean/bin/bbrab-provider-validator" validate \
             --config examples/provider.example.json \
             --fixture examples/fixture.passing.json
+      - name: Build and verify release assets
+        if: matrix.python-version == '3.12'
+        run: |
+          python scripts/release_evidence.py --output "$RUNNER_TEMP/bbrab-release-evidence"
+          cat "$RUNNER_TEMP/bbrab-release-evidence/release-assets.json"
       - name: Reject obvious credential material
         run: >-
           python -c "from pathlib import Path; import re, sys;

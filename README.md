@@ -86,12 +86,13 @@ See [API.md](API.md), [ARCHITECTURE.md](ARCHITECTURE.md), and [SECURITY.md](SECU
 
 ## Playground
 
-The static [Pages Playground](docs/index.html) validates and exports sample, secret-free configurations entirely in the browser. It performs no network requests and cannot run live validation. Serve `docs/` with any static server or enable GitHub Pages after publishing a repository.
+The static [Pages Playground](docs/index.html) validates and exports sample, secret-free configurations entirely in the browser. Its validation rejects both credential field names and credential-shaped values, and its Markdown export escapes all dynamic content. It performs no network requests and cannot run live validation. Serve `docs/` with any static server or enable GitHub Pages after publishing a repository.
 
 ## Tests
 
 ```sh
 PYTHONPATH=src python -m unittest discover -s tests -v
+node --test tests/playground.test.js
 ```
 
 The suite includes a local mock HTTP server. It does not contact a real provider and does not incur cost.
@@ -101,6 +102,7 @@ The suite includes a local mock HTTP server. It does not contact a real provider
 - [Contributing](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [Changelog](CHANGELOG.md)
+- [Local release evidence](RELEASE.md)
 - [Apache-2.0 license](LICENSE)
 - [Codex Skill](skill/bbrab-provider-validator/SKILL.md)
 - [Prompt Blocks](prompt-blocks/README.md)

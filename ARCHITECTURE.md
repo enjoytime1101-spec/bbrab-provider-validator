@@ -16,6 +16,8 @@ secret-free config ─┬─ fixture adapter ─┐
 
 There is no database, background service, telemetry, provider SDK, plugin system, or configuration discovery. The CLI reads only paths and environment-variable names explicitly supplied by the operator.
 
+`docs/playground-core.js` is the browser Playground's testable security boundary; the DOM layer delegates validation and Markdown export to it. `build_backend/bbrab_build.py` is a repository-specific, standard-library PEP 517 backend. Its source-distribution whitelist includes the examples, Skill, Prompt Blocks, Playground, tests, workflows, scripts, and project documentation needed to audit and reproduce the candidate.
+
 ## Environment isolation
 
 Isolation is enforced in layers: the configured base URL host must be allow-listed; the credential declares and must match the provider environment; and an optional response header can bind returned evidence to the intended environment. Every request repeats URL and DNS policy validation, rejects non-global addresses except literal loopback in local/test, then binds the connection to the validated IP. HTTPS still verifies the certificate against the original hostname. A single run constructs every URL from one validated base URL and uses exactly one configured success model plus one fixed invalid error-probe model.

@@ -22,6 +22,14 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ROOT = ROOT / "src" / "bbrab_provider_validator"
 DIST_NAME = "bbrab-provider-validator"
 NORMALIZED_NAME = "bbrab_provider_validator"
+SDIST_ROOT_FILES = (
+    ".gitignore", "API.md", "ARCHITECTURE.md", "BOUNDARIES.md", "CHANGELOG.md",
+    "CONTRIBUTING.md", "LICENSE", "LOCKING.md", "README.md", "RELEASE.md", "SECURITY.md",
+    "pyproject.toml", "requirements.lock",
+)
+SDIST_TREES = (
+    ".github", "build_backend", "docs", "examples", "prompt-blocks", "scripts", "skill", "src", "tests",
+)
 
 
 def _project() -> dict[str, Any]:
@@ -92,6 +100,19 @@ def _record(files: dict[str, bytes]) -> bytes:
     return output.getvalue().encode("utf-8")
 
 
+def _sdist_paths() -> list[Path]:
+    paths = [ROOT / relative for relative in SDIST_ROOT_FILES]
+    for directory in SDIST_TREES:
+        paths.extend(
+            path for path in (ROOT / directory).rglob("*")
+            if path.is_file() and "__pycache__" not in path.parts and path.suffix not in {".pyc", ".pyo"}
+        )
+    missing = [str(path.relative_to(ROOT)) for path in paths if not path.is_file()]
+    if missing:
+        raise FileNotFoundError("sdist whitelist entry is missing: " + ", ".join(missing))
+    return sorted(set(paths), key=lambda path: str(path.relative_to(ROOT)))
+
+
 def get_requires_for_build_wheel(config_settings: dict[str, Any] | None = None) -> list[str]:
     return []
 
@@ -139,15 +160,8 @@ def build_sdist(
     filename = f"{NORMALIZED_NAME}-{_version()}.tar.gz"
     destination = Path(sdist_directory) / filename
     prefix = f"{NORMALIZED_NAME}-{_version()}"
-    included = [
-        "pyproject.toml", "README.md", "LICENSE", "API.md", "ARCHITECTURE.md",
-        "BOUNDARIES.md", "CHANGELOG.md", "CONTRIBUTING.md", "LOCKING.md", "SECURITY.md",
-        "requirements.lock",
-    ]
-    included.extend(str(path.relative_to(ROOT)) for path in sorted(PACKAGE_ROOT.glob("*.py")))
-    included.append("build_backend/bbrab_build.py")
     with tarfile.open(destination, "w:gz", format=tarfile.PAX_FORMAT) as archive:
-        for relative in included:
-            source = ROOT / relative
+        for source in _sdist_paths():
+            relative = source.relative_to(ROOT)
             archive.add(source, arcname=f"{prefix}/{relative}", recursive=False)
     return filename

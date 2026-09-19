@@ -11,3 +11,5 @@ python -m pip install --no-index --no-build-isolation .
 `--no-index` proves the install cannot resolve packages from an index. `--no-build-isolation` proves the backend does not rely on an undeclared package already present in an isolated build environment. The installed console command is then used for an offline fixture validation.
 
 For reproducible releases, build in a pinned Python environment and retain the resulting wheel hash as release evidence. Do not add a runtime or build dependency without updating `pyproject.toml`, `requirements.lock`, the security review, and CI.
+
+`scripts/release_evidence.py` is the release-level check: it builds and inventories the real wheel and source distribution, then installs each one offline in its own fresh venv. See [RELEASE.md](RELEASE.md).
