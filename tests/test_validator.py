@@ -4,6 +4,7 @@ import json
 import os
 import io
 import http.client
+import ssl
 import threading
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
@@ -372,6 +373,9 @@ class HttpTransportTests(unittest.TestCase):
                 observed["raw_closed"] = True
 
         class Context:
+            verify_mode = ssl.CERT_REQUIRED
+            check_hostname = True
+
             def wrap_socket(self, raw, *, server_hostname):
                 observed["server_hostname"] = server_hostname
                 observed["raw"] = raw
